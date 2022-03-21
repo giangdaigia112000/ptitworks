@@ -1,15 +1,19 @@
 <template>
-  <Header />
-  <Body-view />
-  <Footer />
+  <!-- <div>
+    <router-link to="/dang-nhap">Đăng nhập</router-link>
+    <router-link to="/dang-ky">Đăng ký</router-link>
+    <router-link to="/">Trang chủ</router-link>
+  </div> -->
+  <router-view v-slot="{ Component }">
+    <transition>
+      <component :is="Component" />
+    </transition>
+  </router-view>
 </template>
 <script>
-import Header from "./layouts/Header.vue";
-import BodyView from "./layouts/Body.vue";
-import Footer from "./layouts/Footer.vue";
-export default {
-  components: { Header, BodyView, Footer },
-};
+//import LoginView from "./pages/LoginView.vue";
+// import RegisterView from "./pages/RegisterView.vue";
+export default {};
 </script>
 <style></style>
 Header

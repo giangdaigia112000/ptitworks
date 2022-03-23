@@ -1,69 +1,54 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">Navbar</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <router-link to="/">Home</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link to="/hello">Hello</router-link>
-            <button @click="hello">Hello btn</button>
-          </li>
-          <li class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle"
-              href="#"
-              id="navbarDropdown"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              Dropdown
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><hr class="dropdown-divider" /></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
-            </ul>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link disabled">Disabled</a>
-          </li>
-        </ul>
-        <form class="d-flex">
-          <input
-            class="form-control me-2"
-            type="search"
-            placeholder="Search"
-            aria-label="Search"
-          />
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
+  <div class="header-main">
+    <nav class="row">
+      <div class="col-4">
+        <div
+          @click="backhome"
+          class="gohome logo-home d-flex align-items-center"
+        >
+          <img src="../assets/logo.jpg" alt="logo-ptitworks" />
+          <h4>PTITWORKS</h4>
+        </div>
       </div>
-    </div>
-  </nav>
+      <div class="col-6">2</div>
+      <div class="col-2">3</div>
+    </nav>
+  </div>
 </template>
 <script>
 export default {
   name: "HeaderView",
   methods: {
-    hello() {
+    backhome() {
       this.$router.push("/hello");
     },
   },
 };
 </script>
+<style scoped>
+.header-main {
+  height: 8%;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 12px;
+}
+.header-main .row {
+  height: 100%;
+}
+.gohome {
+  cursor: pointer;
+  width: 30%;
+  margin-left: 5%;
+}
+.logo-home {
+  height: 100%;
+}
+.logo-home img {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  margin: 5px;
+}
+.logo-home h4 {
+  text-align: center;
+  margin: 0;
+}
+</style>

@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <p>Body</p>
+  <div class="body-main">
     <router-view></router-view>
   </div>
 </template>
@@ -9,3 +8,8 @@ export default {
   name: "BodyView",
 };
 </script>
+<style>
+.body-main {
+  height: 86%;
+}
+</style>

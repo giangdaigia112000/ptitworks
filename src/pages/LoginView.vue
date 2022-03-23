@@ -48,17 +48,33 @@
   </div>
 </template>
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
-      username: "giang",
+      username: "1",
       password: "112000",
       noti: "Sai mật khẩu !!!!!",
     };
   },
   methods: {
     login() {
-      console.log(this.username + this.password);
+      this.checkUser();
+    },
+    async checkUser() {
+      try {
+        const res = await axios.get(
+          `https://jsonplaceholder.typicode.com/users/`,
+          {
+            params: {
+              id: 1,
+            },
+          }
+        );
+        console.log(res.data[0]);
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };

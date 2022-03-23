@@ -4,6 +4,14 @@ import { createStore } from "vuex";
 export default createStore({
     state: {
         value: "",
+        islogin: false,
+        user: {
+            username: "",
+            password: "",
+            name: "",
+            avt: "",
+            email: "",
+        },
     },
     getters: {
         getValue: (state) => {

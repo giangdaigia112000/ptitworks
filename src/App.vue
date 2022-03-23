@@ -1,11 +1,6 @@
 <template>
-  <!-- <div>
-    <router-link to="/dang-nhap">Đăng nhập</router-link>
-    <router-link to="/dang-ky">Đăng ký</router-link>
-    <router-link to="/">Trang chủ</router-link>
-  </div> -->
   <router-view v-slot="{ Component }">
-    <transition>
+    <transition name="slide">
       <component :is="Component" />
     </transition>
   </router-view>
@@ -15,5 +10,23 @@
 // import RegisterView from "./pages/RegisterView.vue";
 export default {};
 </script>
-<style></style>
-Header
+<style>
+/* .slide-leave-active {
+  transition: opacity 0.5s ease;
+  opacity: 0.5;
+  animation: slide-out 0.5s ease-in forwards;
+}
+
+.slide-leave {
+  opacity: 1;
+  transform: translate(0);
+}
+@keyframes slide-out {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(2%);
+  }
+} */
+</style>

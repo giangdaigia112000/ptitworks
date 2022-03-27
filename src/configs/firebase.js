@@ -1,6 +1,12 @@
 /* eslint-disable */
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, set, push, onValue } from "firebase/database";
+import {
+    getStorage,
+    ref as refstorage,
+    uploadBytes,
+    getDownloadURL,
+} from "firebase/storage";
 
 // TODO: Replace with your app's Firebase project configuration
 const firebaseConfig = {
@@ -17,5 +23,16 @@ const app = initializeApp(firebaseConfig);
 
 // Get a reference to the database service
 const dbchat = getDatabase(app);
+const dbstorage = getStorage(app);
 
-export { ref, onValue, set, push, dbchat };
+export {
+    ref,
+    onValue,
+    set,
+    push,
+    dbchat,
+    refstorage,
+    uploadBytes,
+    getDownloadURL,
+    dbstorage,
+};

@@ -60,6 +60,8 @@ export default {
   methods: {
     login() {
       this.checkUser();
+      this.$store.state.islogin = true;
+      this.$router.push("/");
     },
     async checkUser() {
       try {

@@ -11,5 +11,7 @@ export default {
 <style>
 .body-main {
   height: 86%;
+  overflow: scroll;
+  overflow-x: hidden;
 }
 </style>

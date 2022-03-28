@@ -10,7 +10,15 @@
           <h5>PTITWORKS</h5>
         </div>
       </div>
-      <div class="col-4"></div>
+      <div class="col-4 box-search">
+        <input
+          class="form-control me-2"
+          type="search"
+          placeholder="Tìm kiếm"
+          aria-label="Search"
+          v-model="$store.state.search"
+        />
+      </div>
       <div class="col-4">
         <div class="info-user d-flex align-items-center">
           <img class="out-avt" :src="$store.state.user.avt" alt="avata user" />
@@ -60,8 +68,6 @@ export default {
 };
 </script>
 <style scoped>
-@import url("https://css.gg/profile.css");
-@import url("https://css.gg/log-off.css");
 .header-main {
   height: 50px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 12px;
@@ -76,6 +82,10 @@ export default {
   width: 30%;
   margin-left: 5%;
 }
+.box-search {
+  display: flex;
+  padding: 8px;
+}
 .logo-home {
   height: 100%;
 }
@@ -84,6 +94,7 @@ export default {
   width: 38px;
   border-radius: 50%;
   margin: 5px;
+  object-fit: cover;
 }
 .info-user {
   height: 100%;
@@ -99,6 +110,7 @@ export default {
   width: 38px;
   border-radius: 50%;
   margin: 5px 10px 5px 10px;
+  object-fit: cover;
 }
 .logo-home h5 {
   text-align: center;
@@ -140,7 +152,9 @@ export default {
 }
 .in-avt {
   object-fit: cover;
-  width: 40%;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
   border-radius: 50%;
   margin: 20px 0 8px 0;
 }

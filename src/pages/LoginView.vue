@@ -79,7 +79,10 @@ export default {
     },
     async checkUser() {
       try {
-        if (this.username == "" || this.password == "") return;
+        if (this.username == "" || this.password == "") {
+          this.$refs.btnlogin.disabled = true;
+          return;
+        }
         const url = this.$store.state.api;
         const res = await axios.post(`${url}/login`, {
           username: this.username,

@@ -5,6 +5,7 @@ export default createStore({
     state: {
         value: "test",
         api: "https://thunder-chipped-mule.glitch.me/",
+        search: "",
         islogin: false,
         user: null,
     },

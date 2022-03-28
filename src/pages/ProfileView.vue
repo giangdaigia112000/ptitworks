@@ -185,7 +185,7 @@ export default {
       const url = this.$store.state.api;
       try {
         const res = await axios.post(`${url}update/profile`, {
-          username: "admin",
+          username: this.$store.state.user.id,
           email: this.newuser.email,
           name: this.newuser.name,
           avt: this.newuser.avt,
@@ -210,7 +210,7 @@ export default {
       const url = this.$store.state.api;
       try {
         const res = await axios.post(`${url}update/password`, {
-          username: "admin",
+          username: this.$store.state.user.id,
           password: this.newuser.password,
         });
         console.log(res.data);

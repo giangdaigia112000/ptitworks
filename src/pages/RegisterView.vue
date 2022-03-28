@@ -14,14 +14,23 @@
             <p>Xin chào, vui lòng nhập thông tin đăng ký</p>
           </div>
           <div class="form">
-            <form @submit.prevent="">
+            <form @submit.prevent="register">
               <div class="form-group">
                 <input
-                  type="text"
+                  type="tel"
                   class="form-control"
                   id="exampleInputEmail1"
                   aria-describedby="emailHelp"
                   placeholder="Số điện thoại"
+                  v-model="username"
+                />
+              </div>
+              <div class="form-group">
+                <input
+                  type="password"
+                  class="form-control"
+                  placeholder="Mật khẩu"
+                  v-model="password"
                 />
               </div>
               <div class="form-group">
@@ -30,18 +39,32 @@
                   class="form-control"
                   aria-describedby="emailHelp"
                   placeholder="Họ và tên"
+                  v-model="name"
                 />
               </div>
               <div class="form-group">
                 <input
-                  type="password"
+                  type="email"
                   class="form-control"
-                  placeholder="Mật khẩu"
+                  aria-describedby="emailHelp"
+                  placeholder="Email"
+                  v-model="email"
                 />
               </div>
-              <i class="noti">Tài khoản đã tồn tại !!!</i>
-              <button type="submit" class="btn btn-primary">
-                Tạo tài khoản
+              <i class="noti">{{ noti }}</i>
+              <button type="submit" class="btn btn-primary" ref="btnregister">
+                <p
+                  v-if="!showloading"
+                  style="color: #fff; margin: 0; padding: 0"
+                >
+                  Tạo tài khoản
+                </p>
+                <span
+                  class="spinner-grow spinner-grow-sm text-light"
+                  role="status"
+                  aria-hidden="true"
+                  v-if="showloading"
+                ></span>
               </button>
             </form>
           </div>
@@ -54,6 +77,48 @@
     </div>
   </div>
 </template>
+<script>
+import axios from "axios";
+export default {
+  data() {
+    return {
+      showloading: false,
+      username: "",
+      password: "",
+      name: "",
+      email: "",
+      noti: "",
+    };
+  },
+  methods: {
+    register() {
+      this.$refs.btnregister.disabled = true;
+      this.showloading = true;
+      this.checkregister();
+    },
+    async checkregister() {
+      try {
+        const res = await axios.post(
+          "https://recondite-swamp-spleen.glitch.me/resgister",
+          {
+            username: this.username,
+            password: this.password,
+            name: this.name,
+            email: this.email,
+            avt: "https://avatar.guu.vn/avatar/333071380366631.jpg",
+          }
+        );
+        console.log(res.data);
+        this.noti = res.data.msg.message;
+        this.$refs.btnregister.disabled = false;
+        this.showloading = false;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
+};
+</script>
 <style scoped>
 .pw-container {
   height: 100vh;

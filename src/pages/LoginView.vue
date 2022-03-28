@@ -35,7 +35,20 @@
                 />
               </div>
               <i class="noti">{{ noti }}</i>
-              <button type="submit" class="btn btn-danger">Đăng nhập</button>
+              <button type="submit" class="btn btn-danger" ref="btnlogin">
+                <p
+                  v-if="!showloading"
+                  style="color: #fff; margin: 0; padding: 0"
+                >
+                  Đăng nhập
+                </p>
+                <span
+                  class="spinner-grow spinner-grow-sm text-light"
+                  role="status"
+                  aria-hidden="true"
+                  v-if="showloading"
+                ></span>
+              </button>
             </form>
           </div>
           <div class="register">
@@ -52,28 +65,35 @@ import axios from "axios";
 export default {
   data() {
     return {
-      username: "1",
-      password: "112000",
-      noti: "Sai mật khẩu !!!!!",
+      showloading: false,
+      username: "",
+      password: "",
+      noti: "",
     };
   },
   methods: {
     login() {
+      this.$refs.btnlogin.disabled = true;
+      this.showloading = true;
       this.checkUser();
-      this.$store.state.islogin = true;
-      this.$router.push("/");
     },
     async checkUser() {
       try {
-        const res = await axios.get(
-          `https://jsonplaceholder.typicode.com/users/`,
-          {
-            params: {
-              id: 1,
-            },
-          }
-        );
-        console.log(res.data[0]);
+        if (this.username == "" || this.password == "") return;
+        const url = this.$store.state.api;
+        const res = await axios.post(`${url}/login`, {
+          username: this.username,
+          password: this.password,
+        });
+        console.log(res.data);
+        this.noti = res.data.msg.message;
+        this.$refs.btnlogin.disabled = false;
+        this.showloading = false;
+        if (res.data.user) {
+          this.$store.state.user = res.data.user;
+          this.$store.state.islogin = true;
+          this.$router.push("/");
+        }
       } catch (error) {
         console.log(error);
       }

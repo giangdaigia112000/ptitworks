@@ -10,8 +10,9 @@ export default {
 </script>
 <style>
 .body-main {
-  height: 86%;
+  height: calc(100vh - 85px);
   overflow: scroll;
   overflow-x: hidden;
+  /* background-color: #f9faff; */
 }
 </style>

@@ -7,28 +7,20 @@
           class="gohome logo-home d-flex align-items-center"
         >
           <img src="../assets/logo.jpg" alt="logo-ptitworks" />
-          <h4>PTITWORKS</h4>
+          <h5>PTITWORKS</h5>
         </div>
       </div>
       <div class="col-4"></div>
       <div class="col-4">
         <div class="info-user d-flex align-items-center">
-          <img
-            class="out-avt"
-            src="https://scontent.fhan15-2.fna.fbcdn.net/v/t39.30808-6/264016547_1271758733329800_4925686235036079872_n.jpg?_nc_cat=103&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=itpj8AU7A4cAX-BsnCo&tn=hFadcQFm23jBc4jH&_nc_ht=scontent.fhan15-2.fna&oh=00_AT99RLFO-cdwHK9VvagpPt7FaItgdUkF-vVMpPsKgxhmOw&oe=62422CC0"
-            alt="avata user"
-          />
-          <h5>{{ $store.state.user.name }}</h5>
+          <img class="out-avt" :src="$store.state.user.avt" alt="avata user" />
+          <h6>{{ $store.state.user.name }}</h6>
           <i class="gg-chevron-down"></i>
           <div class="modal-profile">
             <div class="main-profile">
-              <img
-                class="in-avt"
-                src="https://scontent.fhan15-2.fna.fbcdn.net/v/t39.30808-6/264016547_1271758733329800_4925686235036079872_n.jpg?_nc_cat=103&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=itpj8AU7A4cAX-BsnCo&tn=hFadcQFm23jBc4jH&_nc_ht=scontent.fhan15-2.fna&oh=00_AT99RLFO-cdwHK9VvagpPt7FaItgdUkF-vVMpPsKgxhmOw&oe=62422CC0"
-                alt="avt"
-              />
-              <h4>{{ $store.state.user.name }}</h4>
-              <p>{{ $store.state.user.username }}</p>
+              <img class="in-avt" :src="$store.state.user.avt" alt="avt" />
+              <h5>{{ $store.state.user.name }}</h5>
+              <p>{{ $store.state.user.id }}</p>
               <div class="btn-frofile">
                 <div class="go-profile" @click="profile">
                   <i class="gg-profile"></i>
@@ -73,6 +65,7 @@ export default {
 .header-main {
   height: 50px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 12px;
+  margin-bottom: 5px;
 }
 .header-main .row {
   height: 100%;
@@ -87,8 +80,8 @@ export default {
   height: 100%;
 }
 .logo-home img {
-  height: 40px;
-  width: 40px;
+  height: 38px;
+  width: 38px;
   border-radius: 50%;
   margin: 5px;
 }
@@ -102,46 +95,47 @@ export default {
   position: relative;
 }
 .out-avt {
-  height: 40px;
-  width: 40px;
+  height: 38px;
+  width: 38px;
   border-radius: 50%;
   margin: 5px 10px 5px 10px;
 }
-.logo-home h4 {
+.logo-home h5 {
   text-align: center;
   margin: 0;
 }
-.info-user h5 {
+.info-user h6 {
   text-align: center;
   margin: 0;
   margin-right: 5px;
 }
 .modal-profile {
   position: absolute;
-  width: 100%;
+  min-width: 200px;
   top: 100%;
   right: 0;
-  display: none;
-  animation: show-modal-frofile ease-in-out 0.3s;
   border-radius: 5%;
+  display: none;
   cursor: default;
   transform-origin: top;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   z-index: 100;
 }
 .info-user:hover .modal-profile {
+  animation: show-modal-frofile ease-in-out 0.3s;
   display: block;
 }
+
 .main-profile {
   width: 100%;
   height: 200px;
-  background-color: rgb(246, 250, 250);
+  background-color: rgb(255, 255, 255);
   display: flex;
   align-items: center;
   flex-direction: column;
   position: relative;
 }
-.main-profile h4 {
+.main-profile h5 {
   color: blue;
 }
 .in-avt {
@@ -177,7 +171,6 @@ export default {
   height: 30px;
   width: 30px;
   background-color: rgb(255, 255, 255);
-  margin-bottom: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;

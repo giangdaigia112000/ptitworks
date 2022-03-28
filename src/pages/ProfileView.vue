@@ -8,7 +8,7 @@
             class="gohome logo-home d-flex align-items-center"
           >
             <img src="../assets/logo.jpg" alt="logo-ptitworks" />
-            <h4>PTITWORKS</h4>
+            <h5>PTITWORKS</h5>
           </div>
         </div>
         <div class="col-4"></div>
@@ -40,7 +40,7 @@
           </button>
         </div>
         <div class="form-update">
-          <form @submit.prevent="">
+          <form @submit.prevent="updateacc">
             <div class="form-group">
               <label for="Username">Tài khoản</label>
               <input
@@ -57,7 +57,6 @@
                 class="form-control"
                 id="name"
                 v-model="newuser.name"
-                disabled
               />
             </div>
             <div class="form-group">
@@ -69,21 +68,51 @@
                 v-model="newuser.email"
               />
             </div>
-            <button type="submit" class="btn btn-primary">Đổi thông tin</button>
+            <button
+              type="submit"
+              style="width: 150px"
+              ref="btnacc"
+              class="btn btn-primary"
+            >
+              <p v-if="!showloading" style="color: #fff; margin: 0; padding: 0">
+                Sửa thông tin
+              </p>
+              <span
+                class="spinner-grow spinner-grow-sm text-light"
+                role="status"
+                aria-hidden="true"
+                v-if="showloading"
+              ></span>
+            </button>
           </form>
         </div>
       </div>
       <div class="pass-main" v-if="!show">
-        <form @submit.prevent="">
+        <form @submit.prevent="updatepass">
           <div class="form-group">
-            <label for="Username">Mật khẩu</label>
+            <label>Mật khẩu</label>
             <input
               type="password"
               class="form-control"
               v-model="newuser.password"
             />
           </div>
-          <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            style="width: 120px"
+            ref="btnpass"
+          >
+            <p v-if="!showloading" style="color: #fff; margin: 0; padding: 0">
+              Đổi mật khẩu
+            </p>
+            <span
+              class="spinner-grow spinner-grow-sm text-light"
+              role="status"
+              aria-hidden="true"
+              v-if="showloading"
+            ></span>
+          </button>
         </form>
       </div>
     </div>
@@ -96,10 +125,12 @@ import {
   uploadBytes,
   getDownloadURL,
 } from "../configs/firebase";
+import axios from "axios";
 export default {
   data() {
     return {
       show: true,
+      showloading: false,
       newuser: {
         username: "",
         password: "",
@@ -110,7 +141,7 @@ export default {
     };
   },
   created() {
-    this.newuser.username = this.$store.state.user.username;
+    this.newuser.username = this.$store.state.user.id;
     this.newuser.password = this.$store.state.user.password;
     this.newuser.name = this.$store.state.user.name;
     this.newuser.avt = this.$store.state.user.avt;
@@ -145,6 +176,54 @@ export default {
         console.log(url);
       });
     },
+    updateacc() {
+      this.showloading = true;
+      this.$refs.btnacc.disabled = true;
+      this.checkupdateacc();
+    },
+    async checkupdateacc() {
+      const url = this.$store.state.api;
+      try {
+        const res = await axios.post(`${url}update/profile`, {
+          username: "admin",
+          email: this.newuser.email,
+          name: this.newuser.name,
+          avt: this.newuser.avt,
+        });
+        console.log(res.data);
+        if (res.data.user) {
+          this.$store.state.user = res.data.user;
+        }
+        confirm(`${res.data.msg.message}`);
+        this.showloading = false;
+        this.$refs.btnacc.disabled = false;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    updatepass() {
+      this.showloading = true;
+      this.$refs.btnpass.disabled = true;
+      this.checkupdatepass();
+    },
+    async checkupdatepass() {
+      const url = this.$store.state.api;
+      try {
+        const res = await axios.post(`${url}update/password`, {
+          username: "admin",
+          password: this.newuser.password,
+        });
+        console.log(res.data);
+        confirm(`${res.data.msg.message}`);
+        if (res.data.user) {
+          this.$store.state.user = res.data.user;
+        }
+        this.showloading = false;
+        this.$refs.btnpass.disabled = false;
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
 };
 </script>
@@ -157,6 +236,7 @@ export default {
   width: 100%;
   height: 50px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 12px;
+  margin-bottom: 5px;
 }
 .profile-head row {
   width: 100%;
@@ -171,12 +251,12 @@ export default {
   margin-left: 5%;
 }
 .logo-home img {
-  height: 40px;
-  width: 40px;
+  height: 38px;
+  width: 38px;
   border-radius: 50%;
   margin: 5px;
 }
-.logo-home h4 {
+.logo-home h5 {
   text-align: center;
   margin: 0;
 }

@@ -14,7 +14,7 @@ export default {
 </script>
 <style scoped>
 .footer-main {
-  height: 6%;
+  height: 30px;
   text-align: center;
 }
 .footer-main i {

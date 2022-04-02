@@ -4,9 +4,9 @@ import { createStore } from "vuex";
 export default createStore({
     state: {
         value: "test",
-        api: "https://thunder-chipped-mule.glitch.me/",
+        api: "https://ptitword-thcs-cotam.herokuapp.com",
+        api2: "https://thunder-chipped-mule.glitch.me",
         search: "",
-        islogin: false,
         user: null,
     },
     getters: {

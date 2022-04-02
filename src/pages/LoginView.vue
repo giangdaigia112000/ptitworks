@@ -71,6 +71,20 @@ export default {
       noti: "",
     };
   },
+
+  // async beforeCreate() {
+  //   const url = this.$store.state.api;
+  //   const token = localStorage.getItem("token");
+  //   if (token) {
+  //     const res = await axios.post(`${url}/checktoken`, {
+  //       token: token,
+  //     });
+  //     this.$store.state.user = res.data.user;
+  //     console.log(this.$store.state.user);
+  //     //this.$store.state.islogin = true;
+  //     this.$router.push("/");
+  //   }
+  // },
   methods: {
     login() {
       this.$refs.btnlogin.disabled = true;
@@ -94,7 +108,8 @@ export default {
         this.showloading = false;
         if (res.data.user) {
           this.$store.state.user = res.data.user;
-          this.$store.state.islogin = true;
+          //this.$store.state.islogin = true;
+          localStorage.setItem("token", res.data.token);
           this.$router.push("/");
         }
       } catch (error) {

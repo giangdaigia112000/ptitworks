@@ -61,7 +61,9 @@ export default {
       this.$router.push({ name: "profile" });
     },
     logout() {
-      this.$store.state.islogin = false;
+      //this.$store.state.islogin = false;
+      localStorage.removeItem("token");
+      this.$store.state.user = null;
       this.$router.push({ name: "login" });
     },
   },

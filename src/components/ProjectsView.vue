@@ -2,7 +2,11 @@
   <div class="project-container row">
     <div class="nav-project col-1">
       <div class="add-project">
-        <button type="button" class="btn btn-info btn-add-project">
+        <button
+          type="button"
+          class="btn btn-info btn-add-project"
+          @click="addProject"
+        >
           <i class="gg-math-plus"></i>
         </button>
       </div>
@@ -29,39 +33,52 @@
       <h3 style="margin: 15px 0px">Danh sách tất cả dự án</h3>
       <div class="list-card">
         <CardProject
-          v-for="project in projects"
+          v-for="project in listProject"
           :key="project"
-          :tile="project.tile"
-          :mota="project.mota"
-          :image="project.image"
-          v-show="checkshow(project.tile)"
+          :tile="project.data.titleProject"
+          :mota="project.data.description"
+          :image="project.data.avtProject"
+          v-show="checkshow(project.data.titleProject)"
         />
       </div>
+    </div>
+  </div>
+  <!-- Modal -->
+  <ModalAddproject v-if="showModal" @closemodal="closeModal" />
+  <!-- Loading -->
+  <div class="loading-project" v-if="loadingProject">
+    <div
+      class="spinner-border text-primary"
+      style="width: 3rem; height: 3rem"
+      role="status"
+    >
+      <span class="sr-only"></span>
     </div>
   </div>
 </template>
 <script>
 import CardProject from "./CardProject.vue";
+import ModalAddproject from "./ModalAddproject.vue";
+import axios from "axios";
 export default {
   data() {
     return {
-      projects: [
-        {
-          tile: "Lộ trình học Back-end",
-          mota: "Trái với Front-end thì lập trình viên Back-end là người làm việc với dữ liệu, công việc thường nặng tính logic hơn. Chúng ta sẽ cùng tìm hiểu thêm về lộ trình học Back-end nhé.",
-          image:
-            "https://www.akamai.com/site/im-demo/perceptual-standard.jpg?imbypass=true",
-        },
-        {
-          tile: "Siêu năng lực",
-          mota: "Lập trình viên Front-end là người xây dựng ra giao diện websites. Trong phần này F8 sẽ chia sẻ cho bạn lộ trình để trở thành lập trình viên Front-end nhé.",
-          image:
-            "https://www.industrialempathy.com/img/remote/ZiClJf-1920w.jpg",
-        },
-      ],
+      loadingProject: true,
+      showModal: false,
+      projects: [],
+      listProject: [],
     };
   },
-  components: { CardProject },
+  async created() {
+    const url = this.$store.state.api;
+    const res = await axios.post(`${url}/project/take`, {
+      username: this.$store.state.user.id,
+    });
+    this.loadingProject = false;
+    this.projects = res.data;
+    this.listProject = this.projects;
+  },
+  components: { CardProject, ModalAddproject },
   methods: {
     checkshow(title) {
       if (this.$store.state.search == "") {
@@ -74,6 +91,12 @@ export default {
         this.$refs.list.children[i].classList.remove("active");
       }
       this.$refs.list.children[item].classList.add("active");
+    },
+    addProject() {
+      this.showModal = true;
+    },
+    closeModal() {
+      this.showModal = false;
     },
   },
 };
@@ -144,5 +167,10 @@ export default {
 }
 .cards {
   padding: 0 2%;
+}
+.loading-project {
+  position: absolute;
+  left: 50%;
+  top: 50%;
 }
 </style>

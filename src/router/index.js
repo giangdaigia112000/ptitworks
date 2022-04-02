@@ -7,20 +7,31 @@ import ProfileView from "../pages/ProfileView.vue";
 import NotFound from "../pages/404Notfound.vue";
 import ProjectsView from "../components/ProjectsView.vue";
 import ProjectDetail from "../components/ProjectDetail.vue";
+import HomeMain from "../components/HomeMain.vue";
 import store from "../store";
+import axios from "axios";
 const routes = [{
         path: "/",
         name: "Homeview",
         component: HomeView,
+        meta: { requiresAuth: true },
         children: [{
                 path: "/",
-                name: "projects",
-                component: ProjectsView,
+                name: "homemain",
+                component: HomeMain,
+                meta: { requiresAuth: true },
             },
             {
-                path: "/du-an/:id",
-                name: "projectdetail",
+                path: "/du-an",
+                name: "project",
+                component: ProjectsView,
+                meta: { requiresAuth: true },
+            },
+            {
+                path: "/phieu-yeu-cau",
+                name: "eform",
                 component: ProjectDetail,
+                meta: { requiresAuth: true },
             },
         ],
     },
@@ -38,8 +49,13 @@ const routes = [{
         path: "/ho-so",
         name: "profile",
         component: ProfileView,
+        meta: { requiresAuth: true },
     },
-    { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFound },
+    {
+        path: "/:pathMatch(.*)*",
+        name: "NotFound",
+        component: NotFound,
+    },
 ];
 
 const router = createRouter({
@@ -47,19 +63,26 @@ const router = createRouter({
     routes,
 });
 
-router.beforeEach((to, from, next) => {
-    if (
-        to.path !== "/dang-nhap" &&
-        to.path !== "/dang-ky" &&
-        store.state.islogin === false
-    ) {
-        return next({ path: "/dang-nhap" });
+router.beforeEach(async(to, from, next) => {
+    const user = store.state.user;
+    const token = localStorage.getItem("token");
+    if (to.matched.some((record) => record.meta.requiresAuth) && user == null) {
+        if (token) {
+            const url = store.state.api;
+            const res = await axios.post(`${url}/checktoken`, {
+                token: token,
+            });
+            store.state.user = res.data.user;
+            return next({ path: "/" });
+        }
+        return next("/dang-nhap");
     } else if (
-        (store.state.islogin === true && to.path === "/dang-nhap") ||
-        (store.state.islogin === true && to.path === "/dang-ky")
+        (to.path == "/dang-nhap" && token != null) ||
+        (to.path == "/dang-ky" && token != null)
     ) {
         return next({ path: "/" });
     }
     next();
 });
+
 export default router;

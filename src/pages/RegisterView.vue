@@ -98,16 +98,14 @@ export default {
     },
     async checkregister() {
       try {
-        const res = await axios.post(
-          "https://recondite-swamp-spleen.glitch.me/resgister",
-          {
-            username: this.username,
-            password: this.password,
-            name: this.name,
-            email: this.email,
-            avt: "https://avatar.guu.vn/avatar/333071380366631.jpg",
-          }
-        );
+        const url = this.$store.state.api;
+        const res = await axios.post(`${url}/resgister`, {
+          username: this.username,
+          password: this.password,
+          name: this.name,
+          email: this.email,
+          avt: "https://avatar.guu.vn/avatar/333071380366631.jpg",
+        });
         console.log(res.data);
         this.noti = res.data.msg.message;
         this.$refs.btnregister.disabled = false;

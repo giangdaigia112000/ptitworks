@@ -28,6 +28,12 @@ const routes = [{
                 meta: { requiresAuth: true },
             },
             {
+                path: "/du-an-chi-tiet/:id",
+                name: "projectdetail",
+                component: ProjectDetail,
+                meta: { requiresAuth: true },
+            },
+            {
                 path: "/phieu-yeu-cau",
                 name: "eform",
                 component: ProjectDetail,
@@ -72,8 +78,14 @@ router.beforeEach(async(to, from, next) => {
             const res = await axios.post(`${url}/checktoken`, {
                 token: token,
             });
-            store.state.user = res.data.user;
-            return next({ path: "/" });
+            console.log(res.data);
+            if (res.data.user) {
+                store.state.user = res.data.user;
+                return next({ path: "/" });
+            } else {
+                localStorage.removeItem("token");
+                return next("/dang-nhap");
+            }
         }
         return next("/dang-nhap");
     } else if (

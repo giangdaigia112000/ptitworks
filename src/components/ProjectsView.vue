@@ -23,14 +23,18 @@
           <i class="gg-collage"></i>
           <span>Dự án liên quan</span>
         </li>
-        <li @click="clickitem(3)" class="nav-item">
-          <i class="gg-align-bottom"></i>
-          <span>Thống kê</span>
-        </li>
       </ul>
     </div>
     <div class="cards col-11">
-      <h3 style="margin: 15px 0px">Danh sách tất cả dự án</h3>
+      <div>
+        <h3 style="margin: 15px 10px; display: inline-block">
+          Danh sách tất cả dự án
+        </h3>
+        <button type="button" class="btn btn-link" @click="reloadProject">
+          Tải lại
+        </button>
+      </div>
+
       <div class="list-card">
         <CardProject
           v-for="project in listProject"
@@ -39,6 +43,7 @@
           :mota="project.data.description"
           :image="project.data.avtProject"
           v-show="checkshow(project.data.titleProject)"
+          @click="goProjectdetail(project.id)"
         />
       </div>
     </div>
@@ -87,16 +92,44 @@ export default {
       return title.toLowerCase().includes(this.$store.state.search);
     },
     clickitem(item) {
-      for (var i = 0; i < 4; i++) {
+      for (var i = 0; i < 3; i++) {
         this.$refs.list.children[i].classList.remove("active");
       }
       this.$refs.list.children[item].classList.add("active");
+      if (item == 0) {
+        this.listProject = this.projects;
+        console.log(this.listProject);
+      } else if (item == 1) {
+        this.listProject = this.projects.filter(
+          (project) => project.data.creator == this.$store.state.user.id
+        );
+        //console.log(this.listProject);
+      } else if (item == 2) {
+        this.listProject = this.projects.filter(
+          (project) => project.data.creator != this.$store.state.user.id
+        );
+        //console.log(this.listProject);
+      }
     },
     addProject() {
       this.showModal = true;
     },
     closeModal() {
       this.showModal = false;
+    },
+    async reloadProject() {
+      const url = this.$store.state.api;
+      this.loadingProject = true;
+      const res = await axios.post(`${url}/project/take`, {
+        username: this.$store.state.user.id,
+      });
+      this.loadingProject = false;
+      this.projects = res.data;
+      this.listProject = this.projects;
+      this.clickitem(0);
+    },
+    goProjectdetail(idproject) {
+      this.$router.push(`/du-an-chi-tiet/${idproject}`);
     },
   },
 };

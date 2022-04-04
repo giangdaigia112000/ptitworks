@@ -19,6 +19,7 @@
             type="text"
             placeholder="Tên dự án..."
             class="input-nameproject"
+            v-model="project.titleProject"
           />
           <div class="container-uploadimg">
             <label for="input-img" class="preview">
@@ -46,6 +47,16 @@
           </div>
           <div class="content-member">
             <ul class="list-member">
+              <div class="getmember" v-if="showmember" @click="addToMembers">
+                <img
+                  v-if="getdatamember.name != ''"
+                  class="memberavt"
+                  :src="getdatamember.avt"
+                  alt=""
+                />
+                <p>{{ getdatamember.name }}</p>
+                <p>{{ getdatamember.message }}</p>
+              </div>
               <li
                 v-for="member in project.members"
                 :key="member"
@@ -53,11 +64,14 @@
               >
                 <span class="badge bg-primary">{{ member }} x</span>
               </li>
-              <input
-                type="text"
-                spellcheck="false"
-                placeholder="Nhập vào username"
-              />
+              <form @submit.prevent="getMember">
+                <input
+                  type="text"
+                  spellcheck="false"
+                  placeholder="Nhập vào username"
+                  v-model="inputmember"
+                />
+              </form>
             </ul>
           </div>
         </div>
@@ -68,6 +82,7 @@
             placeholder="Leave a comment here"
             id="floatingTextarea2"
             style="height: 100px"
+            v-model="project.description"
           ></textarea>
           <label for="floatingTextarea2">Mô tả dự án</label>
         </div>
@@ -80,7 +95,22 @@
           >
             Đóng
           </button>
-          <button type="button" class="btn btn-primary">Tạo dự án mới</button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            @click="creatProject"
+            ref="btncreatproject"
+          >
+            <p v-if="!showloading" style="color: #fff; margin: 0; padding: 0">
+              Tạo dự án mới
+            </p>
+            <span
+              class="spinner-grow spinner-grow-sm text-light"
+              role="status"
+              aria-hidden="true"
+              v-if="showloading"
+            ></span>
+          </button>
         </div>
       </div>
     </div>
@@ -93,6 +123,7 @@ import {
   uploadBytes,
   getDownloadURL,
 } from "../configs/firebase";
+import axios from "axios";
 export default {
   data() {
     return {
@@ -101,14 +132,51 @@ export default {
         avtProject: "",
         description: "",
         creator: this.$store.state.user.id,
-        members: ["0336277758", "admin"],
+        members: [],
         date: "",
       },
+      getdatamember: {
+        name: "",
+        avt: "",
+        message: "",
+      },
+      showmember: false,
+      inputmember: "",
+      member: "",
+      showloading: false,
     };
   },
   methods: {
     closeModal() {
       this.$emit("closemodal");
+    },
+    async creatProject() {
+      this.$refs.btncreatproject.disabled = true;
+      this.showloading = true;
+      if (
+        this.project.members.length > 0 &&
+        this.project.titleProject != "" &&
+        this.project.description != ""
+      ) {
+        try {
+          const url = this.$store.state.api;
+          var d = new Date();
+          this.project.date = `${d.getDate()}/${
+            d.getMonth() + 1
+          }/${d.getFullYear()}`;
+          const res = await axios.post(`${url}/createproject`, this.project);
+          if (confirm(`${res.data.msg.message}`)) {
+            this.$emit("closemodal");
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        confirm("Vui lòng nhập đủ thông tin !!!");
+      }
+      this.$refs.btncreatproject.disabled = false;
+      this.showloading = false;
+      console.log(this.project.date);
     },
     async uploadimgproject(e) {
       const file = e.target.files[0];
@@ -125,6 +193,49 @@ export default {
       this.project.members = this.project.members.filter(
         (item) => item !== member
       );
+    },
+    async getMember() {
+      this.getdatamember.name = "";
+      this.getdatamember.avt = "";
+      this.getdatamember.message = "";
+      this.member = this.inputmember;
+      this.inputmember = "";
+      if (this.member.length > 9) {
+        if (
+          !this.project.members.includes(this.member) &&
+          this.member != this.$store.state.user.id
+        ) {
+          try {
+            const url = this.$store.state.api;
+            const res = await axios.post(`${url}/finduser`, {
+              username: this.member,
+            });
+            if (res.data.name) {
+              this.getdatamember.name = res.data.name;
+              this.getdatamember.avt = res.data.avt;
+            } else {
+              this.getdatamember.message = res.data.msg.message;
+            }
+
+            this.showmember = true;
+            console.log(this.getmember);
+          } catch (error) {
+            console.log(error);
+          }
+        } else {
+          this.showmember = true;
+          this.getdatamember.message =
+            "tài khoản đã được thêm hoặc chính là bạn";
+          this.inputmember = "";
+        }
+      }
+    },
+    addToMembers() {
+      if (this.getdatamember.name != "") {
+        this.project.members.push(this.member);
+        this.member = "";
+      }
+      this.showmember = false;
     },
   },
 };
@@ -156,7 +267,7 @@ export default {
   height: 200px;
 }
 .preview {
-  border: 2px dashed rgb(45, 45, 45);
+  border: 1px dashed rgb(134, 134, 134);
   width: 100%;
   height: 100%;
   font-size: 22px;
@@ -170,10 +281,10 @@ export default {
   cursor: pointer;
 }
 .form-floating {
-  margin: 20px;
+  margin: 0px 20px;
 }
 .wrapper {
-  margin: 20px;
+  margin: 0px 20px;
 }
 .list-member {
   width: calc(100%);
@@ -183,7 +294,34 @@ export default {
   padding: 10px;
   margin: 20px 0;
   border-radius: 5px;
-  border: 1px solid #888;
+  border: 1px solid rgb(197, 197, 197);
+  position: relative;
+}
+.getmember {
+  position: absolute;
+  z-index: 100;
+  background-color: #888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 5px;
+  min-width: 200px;
+  left: 50%;
+  top: 0%;
+  transform: translateX(-50%) translateY(-105%);
+  border-radius: 10px;
+}
+.getmember img {
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+.getmember p {
+  color: aliceblue;
+  margin: 0;
 }
 .image-project {
   width: 100%;
@@ -201,6 +339,6 @@ export default {
   padding: 5px;
   border: none;
   outline: none;
-  font-size: 16px;
+  font-size: 14px;
 }
 </style>

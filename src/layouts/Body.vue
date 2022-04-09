@@ -11,8 +11,8 @@ export default {
 <style>
 .body-main {
   height: calc(100vh - 85px);
-  overflow: scroll;
   overflow-x: hidden;
-  /* background-color: #f9faff; */
+  margin: 0;
+  padding: 0;
 }
 </style>

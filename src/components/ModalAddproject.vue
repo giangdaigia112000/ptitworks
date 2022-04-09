@@ -62,15 +62,20 @@
                 :key="member"
                 @click="removeMember(member)"
               >
-                <span class="badge bg-primary">{{ member }} x</span>
+                <button type="button" class="btn btn-primary">
+                  {{ member }}
+                  <span class="badge badge-light">x</span>
+                </button>
               </li>
-              <form @submit.prevent="getMember">
+              <form class="form-floating" @submit.prevent="getMember">
                 <input
+                  class="form-control"
                   type="text"
                   spellcheck="false"
                   placeholder="Nhập vào username"
                   v-model="inputmember"
                 />
+                <label for="floatingTextarea2">Nhập vào username</label>
               </form>
             </ul>
           </div>

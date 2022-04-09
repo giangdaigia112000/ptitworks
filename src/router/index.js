@@ -1,42 +1,61 @@
 /* eslint-disable */
 import { createRouter, createWebHistory } from "vue-router";
-import LoginView from "../pages/LoginView.vue";
-import RegisterView from "../pages/RegisterView.vue";
-import HomeView from "../pages/HomeView.vue";
-import ProfileView from "../pages/ProfileView.vue";
-import NotFound from "../pages/404Notfound.vue";
-import ProjectsView from "../components/ProjectsView.vue";
-import ProjectDetail from "../components/ProjectDetail.vue";
-import HomeMain from "../components/HomeMain.vue";
 import store from "../store";
 import axios from "axios";
 const routes = [{
         path: "/",
         name: "Homeview",
-        component: HomeView,
+        component: () =>
+            import ("../pages/HomeView.vue"),
         meta: { requiresAuth: true },
         children: [{
                 path: "/",
                 name: "homemain",
-                component: HomeMain,
+                component: () =>
+                    import ("../pages/HomeMain.vue"),
                 meta: { requiresAuth: true },
             },
             {
                 path: "/du-an",
                 name: "project",
-                component: ProjectsView,
+                component: () =>
+                    import ("../pages/ProjectsView.vue"),
                 meta: { requiresAuth: true },
             },
             {
                 path: "/du-an-chi-tiet/:id",
                 name: "projectdetail",
-                component: ProjectDetail,
+                component: () =>
+                    import ("../components/ProjectDetail.vue"),
                 meta: { requiresAuth: true },
+                children: [{
+                        path: "/du-an-chi-tiet/:id/",
+                        name: "listtask",
+                        component: () =>
+                            import ("../components/ListTask.vue"),
+                        meta: { requiresAuth: true },
+                    },
+                    {
+                        path: "/du-an-chi-tiet/:id/tin-nhan",
+                        name: "messenger",
+                        component: () =>
+                            import ("../components/MessengerView.vue"),
+                        meta: { requiresAuth: true },
+                    },
+                    {
+                        path: "/du-an-chi-tiet/:id/bieu-do",
+                        name: "chart",
+                        component: () =>
+                            import ("../components/ChartView.vue"),
+                        meta: { requiresAuth: true },
+                    },
+                ],
             },
             {
                 path: "/phieu-yeu-cau",
                 name: "eform",
-                component: ProjectDetail,
+                component: () =>
+                    import ("../pages/EformView.vue"),
                 meta: { requiresAuth: true },
             },
         ],
@@ -44,23 +63,27 @@ const routes = [{
     {
         path: "/dang-nhap",
         name: "login",
-        component: LoginView,
+        component: () =>
+            import ("../pages/LoginView.vue"),
     },
     {
         path: "/dang-ky",
         name: "register",
-        component: RegisterView,
+        component: () =>
+            import ("../pages/RegisterView.vue"),
     },
     {
         path: "/ho-so",
         name: "profile",
-        component: ProfileView,
+        component: () =>
+            import ("../pages/ProfileView.vue"),
         meta: { requiresAuth: true },
     },
     {
         path: "/:pathMatch(.*)*",
         name: "NotFound",
-        component: NotFound,
+        component: () =>
+            import ("../pages/404Notfound.vue"),
     },
 ];
 

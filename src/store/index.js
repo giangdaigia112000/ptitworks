@@ -8,6 +8,7 @@ export default createStore({
         api2: "https://thunder-chipped-mule.glitch.me",
         search: "",
         user: null,
+        project: null,
     },
     getters: {
         getValue: (state) => {

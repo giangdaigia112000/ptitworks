@@ -62,8 +62,8 @@
   </div>
 </template>
 <script>
-import CardProject from "./CardProject.vue";
-import ModalAddproject from "./ModalAddproject.vue";
+import CardProject from "../components/CardProject.vue";
+import ModalAddproject from "../components/ModalAddproject.vue";
 import axios from "axios";
 export default {
   data() {

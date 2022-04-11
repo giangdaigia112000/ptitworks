@@ -9,6 +9,7 @@ export default createStore({
         search: "",
         user: null,
         project: null,
+        task: null,
     },
     getters: {
         getValue: (state) => {

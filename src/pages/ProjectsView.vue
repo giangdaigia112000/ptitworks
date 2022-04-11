@@ -98,7 +98,6 @@ export default {
       this.$refs.list.children[item].classList.add("active");
       if (item == 0) {
         this.listProject = this.projects;
-        console.log(this.listProject);
       } else if (item == 1) {
         this.listProject = this.projects.filter(
           (project) => project.data.creator == this.$store.state.user.id

@@ -41,7 +41,6 @@ export default {
 .card-text {
   width: 100%;
   overflow: hidden;
-  overflow: hidden;
   text-overflow: ellipsis;
   line-height: 25px;
   -webkit-line-clamp: 2;

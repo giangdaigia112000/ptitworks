@@ -63,7 +63,7 @@
                 @click="removeMember(member)"
               >
                 <button type="button" class="btn btn-primary">
-                  {{ member }}
+                  {{ member.username }} - {{ member.name }}
                   <span class="badge badge-light">x</span>
                 </button>
               </li>
@@ -139,6 +139,7 @@ export default {
         creator: this.$store.state.user.id,
         members: [],
         date: "",
+        time: "",
       },
       getdatamember: {
         name: "",
@@ -148,6 +149,7 @@ export default {
       showmember: false,
       inputmember: "",
       member: "",
+      getmember: null,
       showloading: false,
     };
   },
@@ -166,9 +168,10 @@ export default {
         try {
           const url = this.$store.state.api;
           var d = new Date();
-          this.project.date = `${d.getDate()}/${
+          this.project.date = `${d.getDate()}-${
             d.getMonth() + 1
-          }/${d.getFullYear()}`;
+          }-${d.getFullYear()}`;
+          this.project.time = `${d.getHours()}: ${d.getMinutes()}`;
           const res = await axios.post(`${url}/createproject`, this.project);
           if (confirm(`${res.data.msg.message}`)) {
             this.$emit("closemodal");
@@ -218,6 +221,12 @@ export default {
             if (res.data.name) {
               this.getdatamember.name = res.data.name;
               this.getdatamember.avt = res.data.avt;
+              console.log(this.member);
+              this.getmember = {
+                username: this.member,
+                name: res.data.name,
+                avt: res.data.avt,
+              };
             } else {
               this.getdatamember.message = res.data.msg.message;
             }
@@ -237,8 +246,9 @@ export default {
     },
     addToMembers() {
       if (this.getdatamember.name != "") {
-        this.project.members.push(this.member);
+        this.project.members.push(this.getmember);
         this.member = "";
+        this.getmember = null;
       }
       this.showmember = false;
     },

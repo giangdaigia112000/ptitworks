@@ -57,6 +57,11 @@
                 <p>{{ getdatamember.name }}</p>
                 <p>{{ getdatamember.message }}</p>
               </div>
+              <div
+                class="spinner-border text-primary"
+                v-if="loadinguser"
+                role="status"
+              ></div>
               <li
                 v-for="member in project.members"
                 :key="member"
@@ -151,6 +156,7 @@ export default {
       member: "",
       getmember: null,
       showloading: false,
+      loadinguser: false,
     };
   },
   methods: {
@@ -203,6 +209,7 @@ export default {
       );
     },
     async getMember() {
+      this.loadinguser = true;
       this.getdatamember.name = "";
       this.getdatamember.avt = "";
       this.getdatamember.message = "";
@@ -210,7 +217,9 @@ export default {
       this.inputmember = "";
       if (this.member.length > 9) {
         if (
-          !this.project.members.includes(this.member) &&
+          !this.project.members.filter(
+            (member) => member.username == this.member
+          ).length > 0 &&
           this.member != this.$store.state.user.id
         ) {
           try {
@@ -227,7 +236,9 @@ export default {
                 name: res.data.name,
                 avt: res.data.avt,
               };
+              this.loadinguser = false;
             } else {
+              this.loadinguser = false;
               this.getdatamember.message = res.data.msg.message;
             }
 
@@ -237,6 +248,7 @@ export default {
             console.log(error);
           }
         } else {
+          this.loadinguser = false;
           this.showmember = true;
           this.getdatamember.message =
             "tài khoản đã được thêm hoặc chính là bạn";

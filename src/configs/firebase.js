@@ -1,6 +1,13 @@
 /* eslint-disable */
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set, push, onValue } from "firebase/database";
+import {
+    getDatabase,
+    ref,
+    set,
+    push,
+    onValue,
+    remove,
+} from "firebase/database";
 import {
     getStorage,
     ref as refstorage,
@@ -30,6 +37,7 @@ export {
     onValue,
     set,
     push,
+    remove,
     dbchat,
     refstorage,
     uploadBytes,

@@ -13,7 +13,7 @@ export default {};
 <style>
 /* .slide-leave-active {
   transition: opacity 0.5s ease;
-  opacity: 0.5;
+  opacity: 0.5; 
   animation: slide-out 0.5s ease-in forwards;
 }
 

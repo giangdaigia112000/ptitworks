@@ -2,7 +2,7 @@
   <div class="listtask-container row">
     <div class="col-1"></div>
     <div class="listtask-nav col-2">
-      <button class="" @click="showModaladdtask">
+      <button class="" @click="showModaladdtask" ref="btncraettask" disabled>
         <i class="bi bi-plus-circle-fill"></i><span>Tạo công việc mới</span>
       </button>
       <div class="listtask-nav-item" @click="clickItem(0)">
@@ -28,33 +28,76 @@
           <h1>{{ $store.state.project.titleProject }}</h1>
         </div>
       </div>
+      <button
+        style="margin-left: 20px"
+        type="button"
+        class="btn btn-link"
+        @click="reloadTask"
+      >
+        Tải lại
+      </button>
       <h3 v-if="listTask.length < 1">Không có công việc nào !!!</h3>
-      <div class="card-task" v-for="task in listTask" :key="task">
+
+      <!-- --------------------------------- -->
+      <div
+        class="card-task"
+        v-for="task in listTask"
+        :key="task"
+        v-show="checkshow(task.data.titletask)"
+        @click="openModaltaskdetail(task.id, getPerfomer(task.data.performer))"
+      >
         <div class="card-task-head">
           <div class="card-task-head-icon">
             <i class="bi bi-briefcase"></i>
           </div>
           <div class="card-task-head-info">
             <h3>{{ task.data.titletask }}</h3>
-            <span>Tạo ngày:{{ task.data.date }} lúc:{{ task.data.time }}</span>
+            <span>Tạo ngày:{{ task.data.date }} lúc: {{ task.data.time }}</span>
           </div>
           <div class="card-task-head-status">
-            <span class="card-task-head-status-icon">{{
-              task.data.status
-            }}</span>
+            <span
+              class="card-task-head-status-0"
+              v-if="checkStatusinfo(task.data) == 1"
+              >Đang tiến hành</span
+            >
+            <span class="card-task-head-status-1" v-if="task.data.status == 1"
+              >Chờ quản lý xác nhận</span
+            >
+            <span class="card-task-head-status-2" v-if="task.data.status == 2"
+              >Đã hoàn thành</span
+            >
+            <span class="card-task-head-status-3" v-if="task.data.status == 3"
+              >Không hoàn thành</span
+            >
+            <span
+              class="card-task-head-status-3"
+              v-if="checkStatusinfo(task.data) == 0"
+              >Đã quá hạn</span
+            >
           </div>
         </div>
         <div class="card-task-body">
           <p class="card-task-body-text">{{ task.data.description }}</p>
         </div>
         <div class="card-task-footer">
+          <span>Phụ trách: </span>
           <img :src="getPerfomer(task.data.performer).avt" alt="" />
           <span>{{ getPerfomer(task.data.performer).name }}</span>
         </div>
       </div>
     </div>
     <div class="col-1"></div>
+
+    <!-- ..................................... -->
     <modal-task v-if="showmodal" @closeModal="closeModaladdtask" />
+    <modal-detail-task
+      v-if="showtaskdetail"
+      @closetaskdetail="closeModaltaskdetail"
+      :idtask="taskdetail"
+      :perfomerinfo="perfomerinfo"
+    />
+
+    <!-- ............................. -->
     <div class="loading-task" v-if="loadingTask">
       <div
         class="spinner-border text-primary"
@@ -68,11 +111,15 @@
 </template>
 <script>
 import ModalTask from "./ModalAddtask.vue";
+import ModalDetailTask from "./ModalDetailTask.vue";
 import axios from "axios";
 export default {
   data() {
     return {
       showmodal: false,
+      showtaskdetail: false,
+      taskdetail: null,
+      perfomerinfo: null,
       loadingTask: true,
       listTask: [],
       loadListtask: [],
@@ -80,10 +127,39 @@ export default {
     };
   },
   mounted() {
+    if (this.$store.state.project.creator == this.$store.state.user.id) {
+      this.$refs.btncraettask.disabled = false;
+    }
     this.getTask();
   },
-  components: { ModalTask },
+  components: { ModalTask, ModalDetailTask },
   methods: {
+    checkshow(title) {
+      if (this.$store.state.search == "") {
+        return true;
+      }
+      return title.toLowerCase().includes(this.$store.state.search);
+    },
+    reloadTask() {
+      this.loadingTask = true;
+      this.getTask();
+      this.clickItem(0);
+    },
+    checkStatusinfo(status) {
+      if (status.status == 0) {
+        var d = new Date();
+        var nowdate = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+        var nowtime = `${d.getHours()}:${d.getMinutes()}`;
+        if (
+          new Date(`${status.deadlinedate} ${status.dealinetime}`) <=
+          new Date(`${nowdate} ${nowtime}`)
+        ) {
+          return 0;
+        } else {
+          return 1;
+        }
+      }
+    },
     clickItem(i) {
       this.$refs.itemactive.style = `transform: translateY(${i * 70}px);`;
       if (i == 0) {
@@ -94,11 +170,15 @@ export default {
         );
       } else if (i == 2) {
         this.listTask = this.loadListtask.filter(
-          (task) => task.data.status != 2
+          (task) =>
+            task.data.status != 2 &&
+            task.data.performer == this.$store.state.user.id
         );
       } else if (i == 3) {
         this.listTask = this.loadListtask.filter(
-          (task) => task.data.status == 2
+          (task) =>
+            task.data.status == 2 &&
+            task.data.performer == this.$store.state.user.id
         );
       }
     },
@@ -107,6 +187,14 @@ export default {
     },
     showModaladdtask() {
       this.showmodal = true;
+    },
+    closeModaltaskdetail() {
+      this.showtaskdetail = false;
+    },
+    openModaltaskdetail(task, getPerfomer) {
+      this.taskdetail = task;
+      this.perfomerinfo = getPerfomer;
+      this.showtaskdetail = true;
     },
     getPerfomer(username) {
       const perfomer = this.members.filter(
@@ -125,7 +213,6 @@ export default {
         });
         this.loadListtask = res.data;
         this.listTask = this.loadListtask;
-        console.log(this.listTask);
         this.loadingTask = false;
       } catch (error) {
         console.log(error);
@@ -179,6 +266,9 @@ export default {
   margin-bottom: 10px;
   border: none;
   background-color: rgb(205, 205, 194);
+}
+.card-task-head-info span {
+  color: #3a78e7;
 }
 .listtask-nav button:hover {
   background-color: #3a78e7;
@@ -311,5 +401,46 @@ export default {
   margin: 0;
   border-radius: 50%;
   margin-right: 10px;
+  margin-left: 10px;
+}
+.card-task-head-status-0 {
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 12px;
+  height: 18px;
+  line-height: 18px;
+  color: #fff;
+  padding: 3px 8px;
+  background-color: rgb(255, 184, 0);
+}
+.card-task-head-status-1 {
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 12px;
+  height: 18px;
+  line-height: 18px;
+  color: #fff;
+  padding: 3px 8px;
+  background-color: rgb(0, 247, 255);
+}
+.card-task-head-status-2 {
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 12px;
+  height: 18px;
+  line-height: 18px;
+  color: #fff;
+  padding: 3px 8px;
+  background-color: rgb(43, 255, 0);
+}
+.card-task-head-status-3 {
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 12px;
+  height: 18px;
+  line-height: 18px;
+  color: #fff;
+  padding: 3px 8px;
+  background-color: rgb(255, 0, 0);
 }
 </style>

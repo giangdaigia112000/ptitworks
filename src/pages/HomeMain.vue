@@ -3,9 +3,6 @@
     <div class="project-btn btn" @click="goProject">
       <i class="bi bi-projector"></i> <span>Dự án</span>
     </div>
-    <div class="eform-btn btn" @click="goEform">
-      <i class="bi bi-card-text"></i> <span>Phiếu yêu cầu</span>
-    </div>
   </div>
 </template>
 <script>

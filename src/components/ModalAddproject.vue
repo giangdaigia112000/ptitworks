@@ -177,8 +177,12 @@ export default {
           this.project.date = `${d.getDate()}-${
             d.getMonth() + 1
           }-${d.getFullYear()}`;
-          this.project.time = `${d.getHours()}: ${d.getMinutes()}`;
+          this.project.time = `${d.getHours()}:${d.getMinutes()}`;
           const res = await axios.post(`${url}/createproject`, this.project);
+          this.$socket.emit("check-member-in-project", {
+            namecreator: this.$store.state.user.name,
+            project: this.project,
+          });
           if (confirm(`${res.data.msg.message}`)) {
             this.$emit("closemodal");
           }

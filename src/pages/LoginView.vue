@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex justify-content-center pw-container">
     <div class="left">
-      <img src="../assets/login_banner.png" alt="" />
+      <img src="../assets/login_banner.png" alt="" @load="loadedData" />
     </div>
     <div class="right">
       <div class="login-container">
@@ -71,20 +71,6 @@ export default {
       noti: "",
     };
   },
-
-  // async beforeCreate() {
-  //   const url = this.$store.state.api;
-  //   const token = localStorage.getItem("token");
-  //   if (token) {
-  //     const res = await axios.post(`${url}/checktoken`, {
-  //       token: token,
-  //     });
-  //     this.$store.state.user = res.data.user;
-  //     console.log(this.$store.state.user);
-  //     //this.$store.state.islogin = true;
-  //     this.$router.push("/");
-  //   }
-  // },
   methods: {
     login() {
       this.$refs.btnlogin.disabled = true;
@@ -94,7 +80,8 @@ export default {
     async checkUser() {
       try {
         if (this.username == "" || this.password == "") {
-          this.$refs.btnlogin.disabled = true;
+          this.$refs.btnlogin.disabled = false;
+          this.showloading = false;
           return;
         }
         const url = this.$store.state.api;
@@ -102,7 +89,6 @@ export default {
           username: this.username,
           password: this.password,
         });
-        console.log(res.data);
         this.noti = res.data.msg.message;
         this.$refs.btnlogin.disabled = false;
         this.showloading = false;
@@ -114,6 +100,8 @@ export default {
         }
       } catch (error) {
         console.log(error);
+        this.$refs.btnlogin.disabled = false;
+        this.showloading = false;
       }
     },
   },
@@ -123,6 +111,11 @@ export default {
 .pw-container {
   height: 100vh;
   background-color: aqua;
+  overflow: hidden;
+}
+.loaded {
+  height: 100vh;
+  background-color: #282c34;
   overflow: hidden;
 }
 .left {

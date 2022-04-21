@@ -25,7 +25,7 @@
       </div>
       <div class="chart">
         <h3>Biểu đồ thống kê công việc</h3>
-        <Doughnut :chart-data="chartData" :width="width" :height="height" />
+        <Doughnut :chart-data="chartData" />
       </div>
     </div>
   </div>
@@ -52,10 +52,6 @@ export default {
   data() {
     return {
       width: {
-        type: Number,
-        default: 500,
-      },
-      height: {
         type: Number,
         default: 500,
       },

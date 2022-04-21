@@ -98,8 +98,19 @@ export default {
     },
     async checkregister() {
       try {
+        if (
+          this.username == "" ||
+          this.password == "" ||
+          this.name == "" ||
+          this.email == ""
+        ) {
+          this.$refs.btnregister.disabled = false;
+          this.showloading = false;
+          confirm("Vui lòng điển đủ thông tin");
+          return;
+        }
         const url = this.$store.state.api;
-        const res = await axios.post(`${url}/resgister`, {
+        const res = await axios.post(`${url}/register`, {
           username: this.username,
           password: this.password,
           name: this.name,
@@ -111,6 +122,8 @@ export default {
         this.$refs.btnregister.disabled = false;
         this.showloading = false;
       } catch (error) {
+        this.showloading = false;
+        this.$refs.btnregister.disabled = false;
         console.log(error);
       }
     },

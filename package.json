@@ -12,7 +12,9 @@
     "chart.js": "^3.7.1",
     "core-js": "^3.8.3",
     "firebase": "^9.6.9",
+    "socket.io-client": "^4.4.1",
     "vue": "^3.2.13",
+    "vue-3-socket.io": "^1.0.5",
     "vue-chartjs": "^4.0.5",
     "vue-router": "^4.0.3",
     "vuex": "^4.0.0"

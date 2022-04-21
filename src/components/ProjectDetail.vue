@@ -6,7 +6,10 @@
     <div class="nav-item-project" @click="clickItem(0)">
       Danh sách công việc
     </div>
-    <div class="nav-item-project" @click="clickItem(1)">Tin nhắn</div>
+    <div class="nav-item-project" @click="clickItem(1)">
+      Tin nhắn
+      <span>{{ countMessageSeen }}</span>
+    </div>
     <div class="nav-item-project" @click="clickItem(2)">Thống kê</div>
     <div class="line-active" ref="lineactive"></div>
   </div>
@@ -18,14 +21,17 @@
 </template>
 <script>
 import axios from "axios";
+import { ref, dbchat, onValue } from "../configs/firebase";
 export default {
   data() {
     return {
       loadedProject: false,
+      countMessageSeen: 0,
     };
   },
-  mounted() {
-    this.getDataProject();
+  async mounted() {
+    await this.getDataProject();
+    this.readMessage();
   },
   methods: {
     back() {
@@ -56,6 +62,15 @@ export default {
         console.log(error);
       }
     },
+    readMessage() {
+      const starCountRef = ref(
+        dbchat,
+        "message/" + this.$store.state.project.id
+      );
+      onValue(starCountRef, (snapshot) => {
+        this.countMessageSeen = snapshot.size;
+      });
+    },
   },
 };
 </script>
@@ -79,6 +94,16 @@ export default {
   text-align: center;
   width: 150px;
   cursor: pointer;
+}
+.nav-item-project span {
+  background-color: rgb(247, 79, 79);
+  color: #fff;
+  font-size: 10px;
+  padding: 3px;
+  padding-right: 4px;
+  margin: 0;
+  text-align: center;
+  border-radius: 10px;
 }
 .line-active {
   position: absolute;

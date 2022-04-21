@@ -184,7 +184,7 @@ export default {
     async checkupdateacc() {
       const url = this.$store.state.api;
       try {
-        const res = await axios.post(`${url}update/profile`, {
+        const res = await axios.post(`${url}/update/profile`, {
           username: this.$store.state.user.id,
           email: this.newuser.email,
           name: this.newuser.name,
@@ -199,6 +199,7 @@ export default {
         this.$refs.btnacc.disabled = false;
       } catch (error) {
         console.log(error);
+        this.showloading = false;
       }
     },
     updatepass() {
@@ -209,7 +210,7 @@ export default {
     async checkupdatepass() {
       const url = this.$store.state.api;
       try {
-        const res = await axios.post(`${url}update/password`, {
+        const res = await axios.post(`${url}/update/password`, {
           username: this.$store.state.user.id,
           password: this.newuser.password,
         });
@@ -222,6 +223,7 @@ export default {
         this.$refs.btnpass.disabled = false;
       } catch (error) {
         console.log(error);
+        this.showloading = false;
       }
     },
   },

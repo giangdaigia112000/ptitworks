@@ -220,6 +220,15 @@ export default {
         });
         if (res.data) {
           console.log(res.data);
+          this.$socket.emit("check-member-in-task", {
+            namecreator: this.$store.state.user.name,
+            image: this.$store.state.user.avt,
+            idProject: this.idproject,
+            titleTask: this.titletask,
+            performer: this.performer,
+            date: this.date,
+            time: this.time,
+          });
           confirm("Tạo công việc mới thành công");
           this.closeModal();
         }

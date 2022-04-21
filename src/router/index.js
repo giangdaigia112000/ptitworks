@@ -101,7 +101,6 @@ router.beforeEach(async(to, from, next) => {
             const res = await axios.post(`${url}/checktoken`, {
                 token: token,
             });
-            console.log(res.data);
             if (res.data.user) {
                 store.state.user = res.data.user;
                 return next({ path: "/" });

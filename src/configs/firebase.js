@@ -6,6 +6,7 @@ import {
     set,
     push,
     onValue,
+    update,
     remove,
 } from "firebase/database";
 import {
@@ -38,6 +39,7 @@ export {
     set,
     push,
     remove,
+    update,
     dbchat,
     refstorage,
     uploadBytes,
